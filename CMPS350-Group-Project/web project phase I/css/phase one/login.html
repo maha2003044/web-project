@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+
+    <title>Login System</title>
+</head>
+<body>
+    <div class="content">
+        <div class="logoarea">
+            <img src="Qatar-University-Logo.png">
+        </div>
+        <div class="imagearea">
+            <img src="qatar-university.png" width="500" height="100%">
+        <div class="loginarea">
+            <h3>Login</h3>
+
+            <form id="loginForm">
+                <label for="username">Username</label>
+                <input type="text" id="username" required> 
+                <br>
+        
+                <label for="password">Password</label>
+                <input type="text" id="password" required>
+                <br>
+                <p id="msg"></p>
+        
+                <button type="submit">Login</button>
+            </form>
+        </div>
+
+        </div>
+    </div>
+
+
+    
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async function(e) {
+
+            e.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            const response = await fetch("users.json"); // Access the users.json file that has student, admin, instructor username and pass
+            const users = await response.json(); // Stores the results of the response
+
+            const user = users.find(u => u.password === password &&
+            u.username === username);
+
+            if (user) {
+                localStorage.setItem("user", JSON.stringify(user));
+                window.location.href = user.role + ".html";
+            } else {
+                document.getElementById("msg").innerText = "Invalid Username or Password";
+            }
+        });
+    </script>
+   
+</body>
+</html>
