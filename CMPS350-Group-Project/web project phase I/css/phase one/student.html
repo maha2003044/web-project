@@ -3,10 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard</title>
+    <title>Student Course Registration</title>
+    <style>
+        body {
+        
+           align-items: center;
+           font-family: Arial, sans-serif;
+            margin: 20px;
+
+        }
+        h1 {
+            color: #333;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+        .hidden {
+            display: none;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, button {
+            margin-bottom: 10px;
+            padding: 8px;
+            width: 100%;
+            max-width: 300px;
+        }
+        button {
+            background-color: rgb(26, 26, 238);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: gray;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            white-space: pre-wrap; 
+        }
+    </style>
 </head>
 <body>
-    <h2>Hello, Student!</h2>
-    <p>This is your dashboard.</p>
+    <h1>Student Course Registration</h1>
+
+
+    <div class="section" id="termSelection">
+        <h2>Select Term</h2>
+        <label for="term">Term:</label>
+        <select id="term">
+            <option value="Fall 2023">Fall 2023</option>
+            <option value="Spring 2024">Spring 2024</option>
+            <option value="Summer 2024">Summer 2024</option>
+        </select>
+        <button onclick="selectTerm()">Next</button>
+    </div>
+
+
+    <div class="section hidden" id="courseRegistration">
+        <h2>Register for a Course</h2>
+        <label for="courseName">Course Name:</label>
+        <input type="text" id="courseName" placeholder="Enter course name">
+        <label for="instructorName">Instructor Name:</label>
+        <input type="text" id="instructorName" placeholder="Enter instructor name">
+        <button onclick="registerForCourse()">Register</button>
+        <div id="registrationMessage" class="output"></div>
+    </div>
+
+
+    <div class="section hidden" id="viewCourses">
+        <h2>View Your Registered Courses</h2>
+        <div id="coursesOutput" class="output"></div>
+    </div>
+    
+    <script>
+        async function getCourse(courseName) {
+            try {
+                const response = await fetch('courses.json');
+                const courses = await response.json();
+                return courses.find(course => course.name === courseName);
+            } catch (error) {
+                console.error("Error fetching courses:", error);
+                return null;
+            }
+        }
+
+        async function getUser(username) {
+            try {
+                const response = await fetch('users.json');
+                const users = await response.json();
+                return users.find(user => user.username === username);
+            } catch (error) {
+                console.error("Error fetching users:", error);
+                return null;
+            }
+        }
+
+        
+        function isLoggedIn() {
+            const username = document.getElementById('username').value;
+            return !!username; 
+        }
+
+        function selectTerm() {
+            const term = document.getElementById('term').value;
+            console.log("Selected term:", term);
+
+
+            document.getElementById('termSelection').classList.add('hidden');
+
+        
+            document.getElementById('courseRegistration').classList.remove('hidden');
+        }
+
+        // CASE 3: Register for a course
+        async function registerForCourse() {
+            const username = document.getElementById('username').value;
+            const courseName = document.getElementById('courseName').value;
+            const instructorName = document.getElementById('instructorName').value;
+
+            if (!isLoggedIn()) {
+                document.getElementById('registrationMessage').innerText = "Registration failed: Student must be logged in to register for courses.";
+                return;
+            }
+
+            const user = await getUser(username);
+            console.log("Fetched user:", user); // Debugging line
+            console.log("User role:", user?.role); // Debugging line
+
+            if (!user || user.role !== "student") {
+                document.getElementById('registrationMessage').innerText = "Registration failed: Only students can register for courses.";
+                return;
+            }
+
+            if (!hasPassedPrerequisites(username, courseName)) {
+                document.getElementById('registrationMessage').innerText = "Registration failed: Student has not passed all prerequisite courses.";
+                return;
+            }
+
+            if (!isCourseOpenForRegistration(courseName)) {
+                document.getElementById('registrationMessage').innerText = "Registration failed: Course is not open for registration.";
+                return;
+            }
+
+            if (!isInstructorAvailable(courseName, instructorName)) {
+                document.getElementById('registrationMessage').innerText = "Registration failed: Instructor has no available slots.";
+                return;
+            }
+
+            const course = await getCourse(courseName);
+            if (!course) {
+                document.getElementById('registrationMessage').innerText = "Registration failed: Course not found.";
+                return;
+            }
+
+            if (!studentRegistrations[username]) {
+                studentRegistrations[username] = [];
+            }
+            studentRegistrations[username].push({ name: courseName, status: "pending" });
+
+            instructorAvailability[courseName][instructorName] -= 1;
+
+            document.getElementById('registrationMessage').innerText = `Registration successful: ${username} has been registered for ${courseName} with ${instructorName}.\nNote: Registration will not be effective until approved by the administrator.`;
+
+  
+            document.getElementById('courseRegistration').classList.add('hidden');
+
+    
+            document.getElementById('viewCourses').classList.remove('hidden');
+
+
+            viewStudentCourses();
+        }
+
+        // CASE 4: View student courses
+        async function viewStudentCourses() {
+            const username = document.getElementById('username').value;
+
+            if (!isLoggedIn()) {
+                document.getElementById('coursesOutput').innerText = "Error: Student must be logged in to view their courses.";
+                return;
+            }
+
+            const user = await getUser(username);
+            if (!user || user.role !== "student") {
+                document.getElementById('coursesOutput').innerText = "Error: Only students can view their courses.";
+                return;
+            }
+
+            const completedCourses = studentProgress[username] || {};
+            let output = "Completed Courses:\n";
+            for (const [courseName, grade] of Object.entries(completedCourses)) {
+                output += `- ${courseName}: Grade ${grade}\n`;
+            }
+
+     
+            const inProgressCourses = studentRegistrations[username]
+                .filter(course => course.status === "in-progress")
+                .map(course => course.name);
+            output += "\nIn-Progress Courses:\n";
+            inProgressCourses.forEach(course => {
+                output += `- ${course}\n`;
+            });
+
+        
+            const pendingCourses = studentRegistrations[username]
+                .filter(course => course.status === "pending" && courseRegistrationStatus[course.name])
+                .map(course => course.name);
+            output += "\nPending Courses:\n";
+            pendingCourses.forEach(course => {
+                output += `- ${course}\n`;
+            });
+
+            document.getElementById('coursesOutput').innerText = output;
+        }
+
+        //Helper functions for CASE 3
+        function hasPassedPrerequisites(username, courseName) {
+            const prerequisites = coursePrerequisites[courseName] || [];
+            const passedCourses = Object.keys(studentProgress[username] || {});
+            return prerequisites.every(prereq => passedCourses.includes(prereq));
+        }
+
+        function isCourseOpenForRegistration(courseName) {
+            return courseRegistrationStatus[courseName] || false;
+        }
+
+        function isInstructorAvailable(courseName, instructorName) {
+            const availability = instructorAvailability[courseName] || {};
+            return availability[instructorName] > 0;
+        }
+
+    </script>
 </body>
 </html>
