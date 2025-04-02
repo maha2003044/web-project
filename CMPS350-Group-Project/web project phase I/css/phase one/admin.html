@@ -3,10 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Admin Dashboard - Manage Courses</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 8px;
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        input, button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .output {
+            white-space: pre-wrap;
+            background: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+    </style>
 </head>
 <body>
-    <h2>Hello, Admin!</h2>
-    <p>This is your dashboard.</p>
+
+    <div class="section">
+        <h2>Welcome, Admin!</h2>
+        <p>Manage courses and validate classes below.</p>
+
+        <button onclick="loadCourses()">View All Courses</button>
+        <div id="courseList" class="output"></div>
+
+        <h3> Create New Course</h3>
+        <input type="text" id="newCourseName" placeholder="Course Name">
+        <input type="text" id="newCourseCategory" placeholder="Course Category">
+        <button onclick="createCourse()">Create Course</button>
+
+        <h3>Validate Class</h3>
+        <input type="text" id="validateCourse" placeholder="Course Name to Validate">
+        <button onclick="validateClass()">Validate</button>
+    </div>
+
+    <script>
+        async function loadCourses() {
+            try {
+                const response = await fetch("courses.json");
+                const data = await response.json();
+                let output = "";
+                data.forEach(c => {
+                    output += `- ${c.cname} (${c.category})\n`;
+                });
+                document.getElementById("courseList").innerText = output;
+            } catch (error) {
+                document.getElementById("courseList").innerText = "Error loading courses.";
+                console.error("Error:", error);
+            }
+        }
+
+        function createCourse() {
+            const name = document.getElementById("newCourseName").value;
+            const category = document.getElementById("newCourseCategory").value;
+
+            if (!name || !category) {
+                alert("Please enter both course name and category.");
+                return;
+            }
+
+            alert(`Course Created: ${name} (${category})\n(Note: Save to courses.json manually in Phase 1)`);
+        }
+
+        function validateClass() {
+            const cname = document.getElementById("validateCourse").value;
+
+            if (!cname) {
+                alert("Please enter a course name to validate.");
+                return;
+            }
+
+            alert(` Class for '${cname}' has been validated.\n(Note: Manually update class status in Phase 1)`);
+        }
+    </script>
+
 </body>
 </html>
+
