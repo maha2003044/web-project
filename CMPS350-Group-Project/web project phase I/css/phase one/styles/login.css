@@ -90,6 +90,9 @@ button:hover {
 @media screen and (max-width: 768px) {
     .logoarea{
         display: none;
+    } 
+    .imagearea{
+    display: none;
     }
 
 
