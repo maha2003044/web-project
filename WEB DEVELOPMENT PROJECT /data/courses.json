@@ -1,0 +1,18 @@
+[
+  {
+    "cname": "Calculus",
+    "category": "Mathematics",
+    "prerequisites": [
+      "Pre-Calculus"
+    ],
+    "classes": [
+      {
+        "instructor": "Dr. Smith",
+        "limit": 3,
+        "enrolled": 0,
+        "status": "in-progress",
+        "schedule": "Thu 12:00-12:50"
+      }
+    ]
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "username": "Maryam1",
+    "password": "123",
+    "role": "student",
+    "name": "Maryam",
+    "id": "200000000",
+    "completedCourses": {
+      "Programming Concepts": "A",
+      "Database Systems": "B+",
+      "OOP": "A",
+      "Pre-Calculus": "B+",
+      "Calculus": "A"
+    }
+  },
+  {
+    "username": "admin1",
+    "password": "admin123",
+    "role": "admin",
+    "name": "Admin"
+  },
+  {
+    "username": "Smith",
+    "password": "dr123",
+    "role": "instructor",
+    "name": "Dr. Smith"
+  }
+]

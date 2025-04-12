@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../styles/admin.css" />
+  <title>Admin Dashboard</title> <!--Page Title-->
+</head>
+<body>
+  <h2>Admin Dashboard</h2>
+
+  <!--Add new course-->
+  <div class="section">
+    <h3>Add New Course</h3>
+    <input type="text" id="newCourseName" placeholder="Course Name">
+    <input type="text" id="newCourseCategory" placeholder="Category">
+    <input type="text" id="newCoursePrereqs" placeholder="Prerequisites">
+    <button onclick="addCourse()">Add Course</button> <!--Creates button-->
+    <p id="courseMsg"></p> <!--Creates msg-->
+  </div>
+
+  <!--Add new class-->
+  <div class="section">
+    <h3>Add New Class</h3>
+    <input type="text" id="classCourseName" placeholder="Course Name">
+    <input type="text" id="classInstructor" placeholder="Instructor Name">
+    <input type="number" id="classLimit" placeholder="Class Limit">
+    <input type="text" id="classSchedule" placeholder="Schedule (e.g., Sun, Tue 09:00-10:30)">
+    <button onclick="addClass()">Add Class</button>
+    <p id="classMsg"></p>
+  </div>
+
+  <!--View Courses -->
+  <div class="section">
+    <h3>All Courses and Classes</h3>
+    <div id="coursesContainer"></div>
+  </div>
+
+  <!--nstructor Interests -->
+  <div class="section">
+    <h3>Instructor's Interests</h3>
+    <div id="interestsSection"></div>
+  </div>
+
+  <!-- Section: Weekly Schedule -->
+  <div class="section">
+    <h3>Weekly Schedule</h3>
+    <div id="scheduleTable"></div>
+  </div>
+
+  <script>
+    let courses = []; //stores all fetched courses
+
+    //loads data 
+    window.onload = async () => {
+      await loadCourses(); //fetch courses and renders them
+      loadInstructorInterests(); //loads the instructors intrests 
+    };
+
+    async function loadCourses() { //loads all the courses and displays them 
+      const res = await fetch("http://localhost:3000/api/courses");
+      courses = await res.json();
+
+      const container = document.getElementById("coursesContainer");
+      container.innerHTML = "";
+
+      //renders each course and class
+      courses.forEach((course, courseIndex) => {
+        const div = document.createElement("div");
+        div.className = "course-card";
+        div.innerHTML = `
+          <h4>${course.cname} (${course.category})</h4>
+          <p>Prerequisites: ${course.prerequisites.join(", ")}</p>
+          ${course.classes && course.classes.length > 0 ? `
+            <ul>
+              ${course.classes.map((cls, idx) => `
+                <li>
+                  Instructor: ${cls.instructor} | Enrolled: ${cls.enrolled} / ${cls.limit} | Status: <strong>${cls.status}</strong><br>
+                  ${cls.schedule ? `Schedule: ${cls.schedule}<br>` : ""}
+                  ${cls.status === "pending" ? `
+                    <button onclick="updateClassStatus('${course.cname}', ${idx}, 'in-progress')">Validate</button>
+                    <button onclick="updateClassStatus('${course.cname}', ${idx}, 'cancelled')">Cancel</button>
+                  ` : ''}
+                </li>
+              `).join("")}
+            </ul>
+          ` : "<p>No classes yet.</p>"}
+        `;
+        container.appendChild(div);
+      });
+
+      generateSchedule(); // Show weekly schedule
+    }
+
+    //approves or cancels the classes
+    async function updateClassStatus(courseName, classIndex, newStatus) {
+      const res = await fetch("http://localhost:3000/api/update-class", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ courseName, classIndex, newStatus })
+      });
+
+      const data = await res.json();
+      alert(data.message);
+      loadCourses(); // reload 
+    }
+
+    //add the new course to JSON
+    async function addCourse() {
+      const cname = document.getElementById("newCourseName").value;
+      const category = document.getElementById("newCourseCategory").value;
+      const prereqs = document.getElementById("newCoursePrereqs").value.split(",").map(p => p.trim());
+
+      const res = await fetch("http://localhost:3000/api/courses", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cname, category, prerequisites: prereqs })
+      });
+
+      const data = await res.json();
+      document.getElementById("courseMsg").innerText = data.message;
+      loadCourses();
+    }
+
+    //adds new class under the course
+    async function addClass() {
+      const cname = document.getElementById("classCourseName").value;
+      const instructor = document.getElementById("classInstructor").value;
+      const limit = parseInt(document.getElementById("classLimit").value);
+      const schedule = document.getElementById("classSchedule").value;
+
+      const res = await fetch("http://localhost:3000/api/add-class", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cname, instructor, limit, schedule })
+      });
+
+      const data = await res.json();
+      document.getElementById("classMsg").innerText = data.message;
+      loadCourses();
+    }
+
+    //loads and shows the instructors intrests 
+    async function loadInstructorInterests() {
+      try {
+        const res = await fetch("http://localhost:3000/data/instructorsIntrests.json");
+        const interests = await res.json();
+        const container = document.getElementById("interestsSection");
+
+        if (interests.length === 0) {
+          container.innerHTML = "<p>No instructor interests submitted yet.</p>";
+          return;
+        }
+
+        interests.forEach(interest => {
+          const div = document.createElement("div");
+          div.className = "interest-item";
+          div.innerHTML = `
+            <strong>${interest.instructor}</strong> wants to teach <strong>${interest.course}</strong>
+            <button onclick="assignInstructor('${interest.course}', '${interest.instructor}')">Assign</button>
+          `;
+          container.appendChild(div);
+        });
+      } catch (err) {
+        console.error("Error loading interests:", err);
+      }
+    }
+
+    //assigns the instructor to the course
+    async function assignInstructor(course, instructor) {
+      try {
+        const res = await fetch("http://localhost:3000/api/assign-instructor", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ courseName: course, instructorName: instructor })
+        });
+
+        const data = await res.json();
+        alert(data.message);
+        loadCourses();
+      } catch (error) {
+        console.error("Error", error);
+  
+      }
+    }
+
+    //Builds the schedule
+    function generateSchedule() {
+      const days = ["Sun", "Mon", "Tue", "Wed", "Thu"];
+      const schedule = {};
+      days.forEach(day => schedule[day] = []);
+
+      //takes the in progress classes
+      courses.forEach(course => {
+        (course.classes || []).forEach(cls => {
+          if (cls.status === "in-progress" && cls.schedule) {
+            const scheduleParts = cls.schedule.split(" ");
+            const time = scheduleParts.slice(-1)[0]; // Get the time part
+            const classDays = scheduleParts.slice(0, -1).join(" ").split(","); // All before time is the day(s)
+
+
+            
+
+            classDays.forEach(d => {
+              const trimmed = d.trim();
+              if (schedule[trimmed]) {
+                schedule[trimmed].push({
+                  course: course.cname,
+                  instructor: cls.instructor,
+                  time: time
+                });
+              }
+            });
+          }
+        });
+      });
+
+      //creats an html table
+      let html = "<table border='1' style='width: 100%; border-collapse: collapse; text-align: left;'>";
+      html += "<tr><th>Day</th><th>Classes</th></tr>";
+
+      for (const day of days) {
+        html += `<tr><td><strong>${day}</strong></td><td>`;
+        if (schedule[day].length === 0) {
+          html += "No classes";
+        } else {
+          schedule[day].forEach(cls => {
+            html += `<div>${cls.time} – ${cls.course} (by ${cls.instructor})</div>`;
+          });
+        }
+        html += "</td></tr>";
+      }
+
+      html += "</table>";
+      document.getElementById("scheduleTable").innerHTML = html;
+    }
+  </script>
+</body>
+</html>

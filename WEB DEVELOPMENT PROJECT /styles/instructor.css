@@ -1,0 +1,67 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    padding: 20px;
+  }
+  
+  h2, h3 {
+    color: #222;
+    text-align: center;
+  }
+  
+  .class-card, .interest-card {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .grade-form {
+    margin-top: 10px;
+  }
+  
+  .grade-form input {
+    padding: 8px;
+    margin: 5px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+  }
+  
+  .grade-form button {
+    padding: 8px 12px;
+    background: rgb(26, 26, 238);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .grade-form button:hover {
+    background: darkblue;
+  }
+  
+  .interest-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+  }
+  
+  .interest-card button {
+    padding: 6px 12px;
+    background-color: seagreen;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .interest-card button:hover {
+    background-color: darkgreen;
+  }
+  

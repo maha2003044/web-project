@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../styles/student.css" />
+  <title>Student Dashboard</title> <!--Page Title-->
+</head>
+<body>
+  <h2>Welcome, Student</h2> <!--Header-->
+
+  <!--Course Registration Section-->
+  <div class="section">
+    <h3>Register for a Course</h3>
+
+    <label for="courseName">Course Name:</label> <!--Course Name Label-->
+    <input type="text" id="courseName" placeholder="e.g., OOP">
+
+    <label for="instructorName">Instructor Name:</label> <!--Instructor Name Label-->
+    <input type="text" id="instructorName" placeholder="e.g., Dr. Ali">
+
+    <button onclick="enrollInCourse()">Register</button> <!--Register Button-->
+    <p id="registrationMessage" style="color: green;"></p>
+  </div>
+
+  <!--Learning Path Section-->
+  <div class="section">
+    <h3>View Learning Path</h3>
+    <!--Button to call viewLearningPath() function-->
+    <button onclick="viewLearningPath()">View My Learning Path</button> <!--Button-->
+    <!--Output area where learning path details will be shown-->
+    <div id="learningOutput" class="output" style="margin-top: 15px;"></div>
+  </div>
+
+  
+
+  <script>
+    let courses = []; //Array to store fetched course data
+    let studentRegistrations = {}; //Object to keep registrations for every student
+
+    //Loads all courses & Registration data from backend
+    async function loadRegistrationData() {
+      const coursesRes = await fetch("http://localhost:3000/api/courses"); //Fetch course data from the backend
+      courses = await coursesRes.json(); //Store courses data 
+
+      const regRes = await fetch("http://localhost:3000/api/student-registrations"); //Fetch registrations
+      studentRegistrations = await regRes.json(); //Stores registration
+    }
+
+    //DOMContentLoaded runs when the page has fully loaded
+    window.addEventListener("DOMContentLoaded", async () => {
+      await loadRegistrationData();
+
+      const user = JSON.parse(localStorage.getItem("user")); //Gets the logged in user from the localStorage
+      if (user?.username && user.role === "student") { //If the user is a valid student, 
+        const usernameInput = document.createElement("input");
+        usernameInput.type = "hidden";
+        usernameInput.id = "username";
+        usernameInput.value = user.username;
+        document.body.appendChild(usernameInput);
+      } else { //if not a student 
+        window.location.href = "login.html"; //redirect to login.html
+      }
+    });
+
+    //Register the student for a specific course
+    function enrollInCourse() {
+      const username = document.getElementById("username").value;  //Get username
+      const courseName = document.getElementById("courseName").value; //Get course name
+      const instructorName = document.getElementById("instructorName").value; //Get instructor name
+      const msg = document.getElementById("registrationMessage"); //Message for feedback
+
+      const user = JSON.parse(localStorage.getItem("user")); //Get logged in users info
+      const course = courses.find(c => c.cname === courseName); //Find the matching course
+
+      if (!course) {
+          //Shows error if course doesnt exist
+        msg.textContent = "Course is not found."; 
+        return;
+      }
+
+      const courseClass = course.classes.find(cls => cls.instructor === instructorName); //Find class with matching instructor
+
+      if (!courseClass) {
+        msg.textContent = "Instructor is not found for this course.";
+        return;
+      }
+
+      if (courseClass.enrolled >= courseClass.limit) {
+        msg.textContent = "No available seats with this instructor.";
+        return;
+      }
+
+
+      const passedCourses = Object.keys(user.completedCourses || {}); //Gets the names of the passed courses
+      const hasAllPrereqs = course.prerequisites.every(p => passedCourses.includes(p)); //Checks if all prereq are passed
+
+      if (!hasAllPrereqs) {
+        msg.textContent = "You have not passed all prerequisites."; //Shows error if the prereq are not there
+        return;
+      }
+
+      //Passed everything, start register
+      if (!studentRegistrations[username]) {
+        studentRegistrations[username] = [];
+      }
+
+      //Add the course and make pending status
+      studentRegistrations[username].push({
+        name: courseName,
+        instructor: instructorName,
+        status: "pending"
+      });
+
+      courseClass.enrolled += 1;
+ //Update the enrolled count for the class
+
+      msg.textContent = `Registered for ${courseName} with ${instructorName}. Waiting for admin approval.`; //Sucess msg
+    }
+
+    //Learning path for use case 4 
+    async function viewLearningPath() {
+      const username = document.getElementById("username").value; //Get student username
+      const output = document.getElementById("learningOutput"); 
+
+      try {
+        const userRes = await fetch("http://localhost:3000/api/users"); //Fetch user data
+        const users = await userRes.json(); //store as JSON
+        const user = users.find(u => u.username === username); //Find the current student
+
+        if (!user) {
+          output.innerText = "The user is not found."; //Show errors if not found
+          return;
+        }
+
+        const regRes = await fetch("http://localhost:3000/api/student-registrations"); //Fetch reg data
+        const registrations = await regRes.json();
+        const studentRegs = registrations[username] || []; //Get students reg
+
+        //Starts formatting the output
+        let html = "<strong> Completed Courses:</strong><ul>";
+        for (const [course, grade] of Object.entries(user.completedCourses)) {
+          html += `<li>${course} — Grade: ${grade}</li>`; //List each completed course
+        }
+        html += "</ul>";
+
+        //Shows the pending courses & in-progress
+        const pending = studentRegs.filter(c => c.status === "pending");
+        const inProgress = studentRegs.filter(c => c.status === "in-progress");
+
+        html += "<strong> Pending Courses:</strong><ul>";
+        pending.forEach(c => html += `<li>${c.name} (Instructor: ${c.instructor})</li>`);
+        html += "</ul>";
+
+        html += "<strong> In-Progress Courses:</strong><ul>";
+        inProgress.forEach(c => html += `<li>${c.name} (Instructor: ${c.instructor})</li>`);
+        html += "</ul>";
+
+        output.innerHTML = html;
+
+      } catch (error) {
+        output.innerText = "Error loading learning path.";
+        console.error(error); //Shows error
+      }
+    }
+  </script>
+</body>
+</html>
+
