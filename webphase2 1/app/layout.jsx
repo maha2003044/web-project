@@ -1,6 +1,8 @@
 
 import "./globals.css"
-import UserInfoProvider from "/Users/naghamalajmi/Desktop/webphase2 1/app/api/components/userInfoProvider.jsx"
+import UserInfoProvider from "./api/components/userInfoProvider"
+
+
 
 export const metadata = {
   title: "Next-Auth Demo",
