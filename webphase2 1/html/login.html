@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/login.css">
+
+    <title>Qatar University Login System</title> <!--This will be the page title-->
+</head>
+<body>
+    <div class="content"> <!--This will be the main container for the login page-->
+        <div class="logoarea"> <!--Logo on the top-left corner-->
+            <img src="../images/Qatar-University-Logo.png" alt="QU Logo">
+        </div>
+        <div class="imagearea"> <!--Image area-->
+            <img src="../images/qatar-university.png" width="500" height="100%" alt="QU Image">
+            </div>
+        <div class="loginarea"> <!--Login form section-->
+            <h3>Login</h3>
+
+            <form id="loginForm">
+
+                <!--Username Input-->
+                <label for="username">Username</label>
+                <input type="text" id="username" required> 
+                <br>
+                
+                <!--Password Input-->
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+                <br>
+                <!--Message area for feedback-->
+                <p id="msg"></p>
+                
+                <!--Submit button-->
+                <button type="submit">Login</button>
+            </form>
+        </div>
+
+        </div>
+    </div>
+
+
+    
+    <!--This script will handle the login-->
+    <script>
+        //This listens for the form submissions
+        document.getElementById("loginForm").addEventListener("submit", async function(e) {
+            e.preventDefault(); //This will prevent the form refreshing the page by default
+            
+            //This takes the inputs, the username & the password 
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            //This fetches the user data from the backend API
+            const response = await fetch("http://localhost:3000/api/users");
+
+            //This will convert the response to a JSON object
+            const users = await response.json(); 
+            
+            //This will find the matching users, matching the names & 
+            const user = users.find(u => u.password === password &&
+            u.username === username);
+
+            if (user) {
+            localStorage.setItem("user", JSON.stringify(user));
+
+            // Redirect 
+            if (user.role === "student") {
+                window.location.href = "student.html";
+            } else if (user.role === "admin") {
+                window.location.href = "admin.html";
+            } else if (user.role === "instructor") {
+                window.location.href = "instructor.html";
+            } else {
+                window.location.href = "main.html"; 
+            }
+            
+
+
+
+            //If a match is not found
+            } else {
+                //A msg will appear showing the user that either the password or username is invalid
+                document.getElementById("msg").innerText = "Invalid Username or Password";
+            }
+        });
+    </script>
+   
+</body>
+</html>

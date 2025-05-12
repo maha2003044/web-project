@@ -1,0 +1,50 @@
+[
+  {
+    "cname": "Calculus",
+    "category": "Mathematics",
+    "prerequisites": [
+      "Pre-Calculus"
+    ],
+    "classes": [
+      {
+        "instructor": "Dr. Smith",
+        "limit": 3,
+        "enrolled": 0,
+        "status": "in-progress",
+        "schedule": "Thu 12:00-12:50"
+      }
+    ]
+  },
+  {
+    "cname": "Linear Algebra",
+    "category": "Mathematics ",
+    "prerequisites": [
+      "Calculus II"
+    ],
+    "classes": [
+      {
+        "instructor": "Dr. Micheal ",
+        "limit": 3,
+        "enrolled": 0,
+        "status": "in-progress",
+        "schedule": "Sun 10:00-10:50"
+      }
+    ]
+  },
+  {
+    "cname": "OOP",
+    "category": "Programming",
+    "prerequisites": [
+      "Programming Concepts"
+    ],
+    "classes": [
+      {
+        "instructor": "Dr. John",
+        "limit": 3,
+        "enrolled": 0,
+        "status": "in-progress",
+        "schedule": "Mon 12:00-12:15"
+      }
+    ]
+  }
+]

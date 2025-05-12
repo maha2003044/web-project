@@ -1,0 +1,152 @@
+[
+  {
+    "name": "Dr. Smith",
+    "email": "smith@university.edu",
+    "department": "Mathematics"
+  },
+  {
+    "name": "Dr. Johnson",
+    "email": "johnson@university.edu",
+    "department": "Computer Science"
+  },
+  {
+    "name": "Dr. Wilson",
+    "email": "wilson@university.edu",
+    "department": "Computer Science"
+  },
+  {
+    "name": "Dr. Davis",
+    "email": "davis@university.edu",
+    "department": "Computer Science"
+  },
+  {
+    "name": "Dr. Martinez",
+    "email": "martinez@university.edu",
+    "department": "Computer Science"
+  },
+  {
+    "name": "Dr. Anderson",
+    "email": "anderson@university.edu",
+    "department": "Computer Science"
+  },
+  {
+    "name": "Dr. Thomas",
+    "email": "thomas@university.edu",
+    "department": "Computer Science"
+  },
+  {
+    "name": "Dr. Jackson",
+    "email": "jackson@university.edu",
+    "department": "Computer Science"
+  },
+  {
+    "name": "Dr. White",
+    "email": "white@university.edu",
+    "department": "Computer Science"
+  },
+  {
+    "name": "Dr. Harris",
+    "email": "harris@university.edu",
+    "department": "Information Systems"
+  },
+  {
+    "name": "Dr. Clark",
+    "email": "clark@university.edu",
+    "department": "Mathematics"
+  },
+  {
+    "name": "Dr. Lewis",
+    "email": "lewis@university.edu",
+    "department": "Mathematics"
+  },
+  {
+    "name": "Dr. Robinson",
+    "email": "robinson@university.edu",
+    "department": "Mathematics"
+  },
+  {
+    "name": "Dr. Walker",
+    "email": "walker@university.edu",
+    "department": "Business"
+  },
+  {
+    "name": "Dr. Hall",
+    "email": "hall@university.edu",
+    "department": "Business"
+  },
+  {
+    "name": "Dr. Allen",
+    "email": "allen@university.edu",
+    "department": "Business"
+  },
+  {
+    "name": "Dr. Young",
+    "email": "young@university.edu",
+    "department": "Business"
+  },
+  {
+    "name": "Dr. King",
+    "email": "king@university.edu",
+    "department": "Business"
+  },
+  {
+    "name": "Dr. Wright",
+    "email": "wright@university.edu",
+    "department": "Natural Sciences"
+  },
+  {
+    "name": "Dr. Scott",
+    "email": "scott@university.edu",
+    "department": "Natural Sciences"
+  },
+  {
+    "name": "Dr. Green",
+    "email": "green@university.edu",
+    "department": "Natural Sciences"
+  },
+  {
+    "name": "Dr. Baker",
+    "email": "baker@university.edu",
+    "department": "Natural Sciences"
+  },
+  {
+    "name": "Dr. Adams",
+    "email": "adams@university.edu",
+    "department": "Natural Sciences"
+  },
+  {
+    "name": "Dr. Nelson",
+    "email": "nelson@university.edu",
+    "department": "Social Sciences"
+  },
+  {
+    "name": "Dr. Carter",
+    "email": "carter@university.edu",
+    "department": "Social Sciences"
+  },
+  {
+    "name": "Dr. Mitchell",
+    "email": "mitchell@university.edu",
+    "department": "Social Sciences"
+  },
+  {
+    "name": "Dr. Perez",
+    "email": "perez@university.edu",
+    "department": "Social Sciences"
+  },
+  {
+    "name": "Dr. Roberts",
+    "email": "roberts@university.edu",
+    "department": "Social Sciences"
+  },
+  {
+    "name": "Dr. Turner",
+    "email": "turner@university.edu",
+    "department": "Arts"
+  },
+  {
+    "name": "Dr. Phillips",
+    "email": "phillips@university.edu",
+    "department": "Arts"
+  }
+]

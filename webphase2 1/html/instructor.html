@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../styles/instructor.css">
+  <title>Instructor Dashboard</title>
+</head>
+<body>
+  <h2>Instructor Dashboard</h2>
+
+  
+  <div id="myClassesContainer"></div>
+
+
+  <h3>Express Interest in Courses</h3>
+  <div id="interestContainer"></div>
+
+  <script>
+    let user; //keeps logged in instructor data
+
+    window.onload = async () => { //runs when the page has reloaded
+      user = JSON.parse(localStorage.getItem("user")); //gets the instructor from the localStorage
+
+      if (!user || user.role !== "instructor") { //redirects if user is not an instructor 
+        alert("Access denied. Please log in as an instructor.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      await loadMyClasses(); //loads the instructors assigned classes
+      await loadPublishedCourses(); //thsi loads the courses available for intrest
+    };
+
+    // Load classes assigned to this instructor
+    async function loadMyClasses() {
+      const res = await fetch(`http://localhost:3000/api/instructor-classes/${user.name}`); //API call using instructors name
+      const myClasses = await res.json();
+
+      const container = document.getElementById("myClassesContainer");
+
+      //if no classes were found
+      if (myClasses.length === 0) {
+        container.innerHTML = "<p>No active classes found.</p>";
+        return;
+      }
+      //show for each class
+      myClasses.forEach((cls, idx) => {
+        const div = document.createElement("div");
+        div.className = "class-card";
+        div.innerHTML = `
+          <h3>${cls.courseName}</h3>
+          <p>Instructor: ${cls.classInfo.instructor}</p>
+          <p>Enrolled: ${cls.classInfo.enrolled}</p>
+          <div class="grade-form">
+            <input type="text" placeholder="Student Username" id="student-${idx}" />
+            <input type="text" placeholder="Grade (e.g., A, B+)" id="grade-${idx}" />
+            <button onclick="submitGrade('${cls.courseName}', 'student-${idx}', 'grade-${idx}')">Submit Grade</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    //submit a grade for a student
+    async function submitGrade(courseName, studentIdField, gradeFieldId) {
+      const username = document.getElementById(studentIdField).value.trim();
+      const grade = document.getElementById(gradeFieldId).value.trim();
+
+      //shows an alert if the field are empty
+      if (!username || !grade) {
+        alert("Please enter both student username and grade.");
+        return;
+      }
+
+      try {
+        //send POST request to the backend API
+        const res = await fetch("http://localhost:3000/api/submit-grade", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, courseName, grade })
+        });
+
+        const result = await res.json();
+        alert(result.message); //nortifys the instructor 
+      } catch (error) {
+        console.error("Error submitting grade:", error); //logs the errors 
+        alert("Failed to submit grade.");
+      }
+    }
+
+    //Load published courses so instructor can express interest
+    async function loadPublishedCourses() {
+      const res = await fetch("http://localhost:3000/api/published-courses"); //calls the backend
+      const courses = await res.json();
+      const container = document.getElementById("interestContainer");
+
+      //if no courses are available show msg
+      if (courses.length === 0) {
+        container.innerHTML = "<p>No courses currently published for assignment.</p>";
+        return;
+      }
+
+      //create card for each course
+      courses.forEach(course => {
+        const div = document.createElement("div");
+        div.className = "interest-card";
+        div.innerHTML = `
+          <span>${course}</span>
+          <button onclick="expressInterest('${course}')">Express Interest</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    //submit the instructors intrest to the backend
+    async function expressInterest(course) {
+      try {
+        const res = await fetch("http://localhost:3000/api/express-interest", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ instructor: user.name, course }) //sends over the instructors name and course
+        });
+
+        const result = await res.json();
+        alert(result.message);
+      } catch (error) {
+        console.error("Error ", error);
+        alert("Failed to submit the intrests");
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Class {
+  id         Int      @id @default(autoincrement())
+  instructor String
+  course     String
+  limit      Int
+  enrolled   Int
+  status     String
+  schedule   DateTime
+  
+  // Relations
+  studentCourses StudentCourse[]
+}
+
+model Course {
+  couId        Int      @id @default(autoincrement())
+  cname        String
+  category     String
+  prerequisites String   
+  
+  // Relations
+  studentCourses StudentCourse[]
+}
+
+model Instructor {
+  insId      Int     @id @default(autoincrement()) 
+  name       String
+  email      String
+  department String
+}
+
+model Student {
+  studentId Int    @id @default(autoincrement()) 
+  name      String
+  email     String
+  year      Int 
+  
+  // Relations
+  enrollments StudentCourse[]
+}
+
+// New model for tracking student enrollments in courses
+model StudentCourse {
+  id             Int       @id @default(autoincrement())
+  studentId      Int
+  courseId       Int
+  classId        Int
+  enrollmentDate DateTime  @default(now())
+  status         String    
+  grade          String?
+  
+  // Relations
+  student        Student   @relation(fields: [studentId], references: [studentId])
+  course         Course    @relation(fields: [courseId], references: [couId])
+  class          Class     @relation(fields: [classId], references: [id])
+  
+  @@unique([studentId, courseId, classId])
+}

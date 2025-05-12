@@ -1,0 +1,252 @@
+[
+  {
+    "cname": "Calculus I",
+    "category": "Mathematics",
+    "prerequisites": "Precalculus"
+  },
+  {
+    "cname": "Calculus II",
+    "category": "Mathematics",
+    "prerequisites": "Calculus I"
+  },
+  {
+    "cname": "Linear Algebra",
+    "category": "Mathematics",
+    "prerequisites": "Calculus I"
+  },
+  {
+    "cname": "Differential Equations",
+    "category": "Mathematics",
+    "prerequisites": "Calculus II"
+  },
+  {
+    "cname": "Discrete Mathematics",
+    "category": "Mathematics",
+    "prerequisites": "None"
+  },
+  {
+    "cname": "Statistics",
+    "category": "Mathematics",
+    "prerequisites": "Calculus I"
+  },
+  {
+    "cname": "Probability Theory",
+    "category": "Mathematics",
+    "prerequisites": "Calculus II"
+  },
+  {
+    "cname": "Introduction to Programming",
+    "category": "Computer Science",
+    "prerequisites": "None"
+  },
+  {
+    "cname": "Object-Oriented Programming",
+    "category": "Computer Science",
+    "prerequisites": "Introduction to Programming"
+  },
+  {
+    "cname": "Data Structures",
+    "category": "Computer Science",
+    "prerequisites": "Object-Oriented Programming"
+  },
+  {
+    "cname": "Algorithms",
+    "category": "Computer Science",
+    "prerequisites": "Data Structures"
+  },
+  {
+    "cname": "Database Systems",
+    "category": "Computer Science",
+    "prerequisites": "Data Structures"
+  },
+  {
+    "cname": "Web Development",
+    "category": "Computer Science",
+    "prerequisites": "Object-Oriented Programming"
+  },
+  {
+    "cname": "Mobile Development",
+    "category": "Computer Science",
+    "prerequisites": "Object-Oriented Programming"
+  },
+  {
+    "cname": "Computer Networks",
+    "category": "Computer Science",
+    "prerequisites": "Data Structures"
+  },
+  {
+    "cname": "Operating Systems",
+    "category": "Computer Science",
+    "prerequisites": "Data Structures"
+  },
+  {
+    "cname": "Software Engineering",
+    "category": "Computer Science",
+    "prerequisites": "Database Systems"
+  },
+  {
+    "cname": "Artificial Intelligence",
+    "category": "Computer Science",
+    "prerequisites": "Data Structures"
+  },
+  {
+    "cname": "Machine Learning",
+    "category": "Computer Science",
+    "prerequisites": "Artificial Intelligence"
+  },
+  {
+    "cname": "Natural Language Processing",
+    "category": "Computer Science",
+    "prerequisites": "Machine Learning"
+  },
+  {
+    "cname": "Computer Vision",
+    "category": "Computer Science",
+    "prerequisites": "Machine Learning"
+  },
+  {
+    "cname": "Cloud Computing",
+    "category": "Computer Science",
+    "prerequisites": "Computer Networks"
+  },
+  {
+    "cname": "Cybersecurity",
+    "category": "Computer Science",
+    "prerequisites": "Computer Networks"
+  },
+  {
+    "cname": "Project Management",
+    "category": "Information Systems",
+    "prerequisites": "Software Engineering"
+  },
+  {
+    "cname": "Advanced Programming",
+    "category": "Computer Science",
+    "prerequisites": "Object-Oriented Programming"
+  },
+  {
+    "cname": "Business Communication",
+    "category": "Business",
+    "prerequisites": "None"
+  },
+  {
+    "cname": "Marketing Principles",
+    "category": "Business",
+    "prerequisites": "None"
+  },
+  {
+    "cname": "Finance Fundamentals",
+    "category": "Business",
+    "prerequisites": "None"
+  },
+  {
+    "cname": "Accounting Basics",
+    "category": "Business",
+    "prerequisites": "None"
+  },
+  {
+    "cname": "Business Ethics",
+    "category": "Business",
+    "prerequisites": "None"
+  },
+  {
+    "cname": "Organizational Behavior",
+    "category": "Business",
+    "prerequisites": "Business Communication"
+  },
+  {
+    "cname": "Physics I",
+    "category": "Natural Sciences",
+    "prerequisites": "Calculus I"
+  },
+  {
+    "cname": "Physics II",
+    "category": "Natural Sciences",
+    "prerequisites": "Physics I"
+  },
+  {
+    "cname": "Chemistry I",
+    "category": "Natural Sciences",
+    "prerequisites": "None"
+  },
+  {
+    "cname": "Chemistry II",
+    "category": "Natural Sciences",
+    "prerequisites": "Chemistry I"
+  },
+  {
+    "cname": "Biology I",
+    "category": "Natural Sciences",
+    "prerequisites": "None"
+  },
+  {
+    "cname": "Biology II",
+    "category": "Natural Sciences",
+    "prerequisites": "Biology I"
+  },
+  {
+    "cname": "Introduction to Psychology",
+    "category": "Social Sciences",
+    "prerequisites": "None"
+  },
+  {
+    "cname": "Cognitive Psychology",
+    "category": "Social Sciences",
+    "prerequisites": "Introduction to Psychology"
+  },
+  {
+    "cname": "Social Psychology",
+    "category": "Social Sciences",
+    "prerequisites": "Introduction to Psychology"
+  },
+  {
+    "cname": "Microeconomics",
+    "category": "Social Sciences",
+    "prerequisites": "None"
+  },
+  {
+    "cname": "Macroeconomics",
+    "category": "Social Sciences",
+    "prerequisites": "Microeconomics"
+  },
+  {
+    "cname": "World History",
+    "category": "Social Sciences",
+    "prerequisites": "None"
+  },
+  {
+    "cname": "Political Science",
+    "category": "Social Sciences",
+    "prerequisites": "None"
+  },
+  {
+    "cname": "Sociology",
+    "category": "Social Sciences",
+    "prerequisites": "None"
+  },
+  {
+    "cname": "Anthropology",
+    "category": "Social Sciences",
+    "prerequisites": "None"
+  },
+  {
+    "cname": "Philosophy",
+    "category": "Arts",
+    "prerequisites": "None"
+  },
+  {
+    "cname": "Literature",
+    "category": "Arts",
+    "prerequisites": "None"
+  },
+  {
+    "cname": "Art History",
+    "category": "Arts",
+    "prerequisites": "None"
+  },
+  {
+    "cname": "Music Theory",
+    "category": "Arts",
+    "prerequisites": "None"
+  }
+]

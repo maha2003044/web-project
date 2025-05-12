@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Course {
+  id            Int                  @id @default(autoincrement())
+  cname         String               @unique
+  category      String
+  classes       Class[]
+  prerequisites Prerequisite[]
+  interests     InstructorInterest[]
+  isPublished   Boolean              @default(false)
+}
+
+model Prerequisite {
+  id       Int    @id @default(autoincrement())
+  name     String
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+model Class {
+  id         Int    @id @default(autoincrement())
+  instructor String
+  limit      Int
+  enrolled   Int
+  status     String
+  schedule   String
+
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id              Int               @id @default(autoincrement())
+  username        String            @unique
+  password        String
+  role            String
+  name            String
+  studentId       String?
+  completedGrades CompletedCourse[]
+}
+
+model CompletedCourse {
+  id     Int    @id @default(autoincrement())
+  course String
+  grade  String
+  userId Int
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model InstructorInterest {
+  id         Int    @id @default(autoincrement())
+  instructor String
+  courseId   Int
+  course     Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}

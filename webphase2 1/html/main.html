@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/main.css">
+    <title>Qatar University Main Page</title> <!--This is the title of the page-->
+</head>
+<body>
+    <h3>Available Courses</h3> <!--The header-->
+
+    <!--Search form-->
+    <label for="search">Search Courses</label>
+    <input type="text" id="searchName" placeholder="Enter Course Name"> <!--To search using the course Name-->
+    <input type="text" id="searchCategory" placeholder="Enter Category"> <!--To search using thr Category Name-->
+    <!--Search button-->
+    <button onclick="searchCourses()">Search</button>
+
+    <!--An unordered list displaying the offered courses-->
+    <ul id="offeredcourses"></ul>
+
+    <script>
+        //Stores the courses
+        let courses = [];
+
+        //Fetches the list of courses from the server
+        async function getCourses() {
+            //Calls the API
+            const response = await fetch("http://localhost:3000/api/courses");
+            //Parse the response as JSON
+            courses = await response.json();
+            //Shows the courses on the page
+            displayCourses(courses);
+        }
+        //Displays a list of the relevant courses 
+        function displayCourses(relevantCourses){
+            const offeredcourses = document.getElementById("offeredcourses");
+            offeredcourses.innerHTML = ""; // Clear previous courses 
+
+            relevantCourses.forEach(course => {
+                const li = document.createElement("li"); //Creates a list for each course
+                li.textContent = `${course.cname} - ${course.category}`; //Sets the course info
+                offeredcourses.appendChild(li); //Adds it to the ul
+            });
+        }
+        //Filters the courses based on either the name or category
+        function searchCourses(){
+            const searchName = document.getElementById("searchName").value.toLowerCase();
+            const searchCategory = document.getElementById("searchCategory").value.toLowerCase();
+            
+            //Filters based on the entered values
+            const relevantCourses = courses.filter(course => 
+            (searchName && course.cname.toLowerCase().includes(searchName)) ||
+            (searchCategory && course.category.toLowerCase().includes(searchCategory)) ||
+            (!searchName && !searchCategory)
+               
+            );
+            //Shows the results 
+            displayCourses(relevantCourses);
+        }
+        //Calls this when the page initially loads 
+        getCourses();
+    </script>
+</body>
+</html>
