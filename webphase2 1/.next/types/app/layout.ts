@@ -1,4 +1,4 @@
-// File: /Users/shxiikha/Downloads/webphase2/app/layout.js
+// File: /Users/naghamalajmi/Desktop/webphase2 1/app/layout.jsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

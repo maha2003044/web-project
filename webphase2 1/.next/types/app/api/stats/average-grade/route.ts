@@ -1,4 +1,4 @@
-// File: /Users/shxiikha/Downloads/webphase2/app/api/stats/average-grade/route.js
+// File: /Users/naghamalajmi/Desktop/webphase2 1/app/api/stats/average-grade/route.js
 import * as entry from '../../../../../../app/api/stats/average-grade/route.js'
 import type { NextRequest } from 'next/server.js'
 

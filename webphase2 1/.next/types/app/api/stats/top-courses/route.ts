@@ -1,4 +1,4 @@
-// File: /Users/shxiikha/Downloads/webphase2/app/api/stats/top-courses/route.js
+// File: /Users/naghamalajmi/Desktop/webphase2 1/app/api/stats/top-courses/route.js
 import * as entry from '../../../../../../app/api/stats/top-courses/route.js'
 import type { NextRequest } from 'next/server.js'
 

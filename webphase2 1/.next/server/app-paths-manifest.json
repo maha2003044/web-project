@@ -1,16 +1,3 @@
 {
-  "/statistics/page": "app/statistics/page.js",
-  "/api/stats/students-by-year/route": "app/api/stats/students-by-year/route.js",
-  "/api/stats/students-by-category/route": "app/api/stats/students-by-category/route.js",
-  "/api/stats/students-by-course/route": "app/api/stats/students-by-course/route.js",
-  "/api/stats/top-courses/route": "app/api/stats/top-courses/route.js",
-  "/api/stats/failure-by-course/route": "app/api/stats/failure-by-course/route.js",
-  "/api/stats/failure-by-category/route": "app/api/stats/failure-by-category/route.js",
-  "/api/stats/average-grade/route": "app/api/stats/average-grade/route.js",
-  "/api/stats/completion-by-year/route": "app/api/stats/completion-by-year/route.js",
-  "/api/stats/department-performance/route": "app/api/stats/department-performance/route.js",
-  "/api/stats/class-utilization/route": "app/api/stats/class-utilization/route.js",
-  "/api/stats/top-instructors/route": "app/api/stats/top-instructors/route.js",
-  "/api/stats/enrollment-trend/route": "app/api/stats/enrollment-trend/route.js",
   "/page": "app/page.js"
 }
